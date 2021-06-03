@@ -1,5 +1,13 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>img/quarantine-1.png</file>
+        <file>img/quarantine.png</file>
+        <file>img/radar-1.png</file>
+        <file>img/radar.png</file>
+        <file>img/settings.png</file>
+        <file>img/status.png</file>
+        <file>img/update.png</file>
+        <file>Dock.qml</file>
     </qresource>
 </RCC>

@@ -20,6 +20,10 @@ Item {
                 icon.width: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onClicked: {
+                    stackView.replace(scan_page)
+                }
+
                 Text {
                     text: "Scan"
                     anchors.bottom: parent.bottom
@@ -33,6 +37,10 @@ Item {
                 icon.width: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onClicked: {
+                    stackView.replace(status_page)
+                }
+
                 Text {
                     text: "Status"
                     anchors.bottom: parent.bottom
@@ -46,6 +54,10 @@ Item {
                 icon.width: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onClicked: {
+                    stackView.replace(update_page)
+                }
+
                 Text {
                     text: "Update"
                     anchors.bottom: parent.bottom
@@ -59,6 +71,10 @@ Item {
                 icon.width: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onClicked: {
+                    stackView.replace(quarantine_page)
+                }
+
                 Text {
                     text: "Quarantine"
                     anchors.bottom: parent.bottom
@@ -72,6 +88,10 @@ Item {
                 icon.width: parent.width
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                onClicked: {
+                    stackView.replace(settings_page)
+                }
+
                 Text {
                     text: "Settings"
                     anchors.bottom: parent.bottom

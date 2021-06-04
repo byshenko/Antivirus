@@ -9,5 +9,10 @@
         <file>img/status.png</file>
         <file>img/update.png</file>
         <file>Dock.qml</file>
+        <file>Scan.qml</file>
+        <file>Status.qml</file>
+        <file>Update.qml</file>
+        <file>Quarantine.qml</file>
+        <file>Settings.qml</file>
     </qresource>
 </RCC>

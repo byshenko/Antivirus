@@ -9,8 +9,45 @@ Window {
     visible: true
     title: qsTr("Open Source Antivirus")
 
+    StackView {
+        id: stackView
+        anchors.fill: parent
+        initialItem: scan_page
 
+        pushEnter: topTransition // empty animation for stackView.push
+        replaceEnter: topTransition // empty animation for stackView.replace
 
-    Dock {
+        Transition {
+            id: topTransition
+        }
     }
+
+    Scan {
+        id: scan_page
+        visible: true
+    }
+
+    Status {
+        id: status_page
+        visible: false
+    }
+
+    Update {
+        id: update_page
+        visible: false
+    }
+
+    Quarantine {
+        id: quarantine_page
+        visible: false
+    }
+
+    Settings {
+        id: settings_page
+        visible: false
+    }
+
+
+
+
 }

@@ -1,18 +1,19 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>img/quarantine-1.png</file>
-        <file>img/quarantine.png</file>
-        <file>img/radar-1.png</file>
-        <file>img/radar.png</file>
-        <file>img/settings.png</file>
-        <file>img/status.png</file>
-        <file>img/update.png</file>
-        <file>Dock.qml</file>
-        <file>Scan.qml</file>
-        <file>Status.qml</file>
-        <file>Update.qml</file>
-        <file>Quarantine.qml</file>
-        <file>Settings.qml</file>
+        <file>dockPages/img/quarantine-1.png</file>
+        <file>dockPages/img/quarantine.png</file>
+        <file>dockPages/img/radar-1.png</file>
+        <file>dockPages/img/radar.png</file>
+        <file>dockPages/img/settings.png</file>
+        <file>dockPages/img/status.png</file>
+        <file>dockPages/img/update.png</file>
+        <file>dockPages/Dock.qml</file>
+        <file>dockPages/Quarantine.qml</file>
+        <file>dockPages/Scan.qml</file>
+        <file>dockPages/Settings.qml</file>
+        <file>dockPages/Status.qml</file>
+        <file>dockPages/Update.qml</file>
+        <file>dockPages/DockButton.qml</file>
     </qresource>
 </RCC>

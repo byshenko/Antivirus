@@ -1,8 +1,11 @@
+#include <QQmlContext>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
 #include <QLocale>
 #include <QTranslator>
+
+#include <scanner.h>
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +32,10 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    Scanner scanner;
+    engine.rootContext()->setContextProperty("scanner", &scanner);
+
     engine.load(url);
 
     return app.exec();

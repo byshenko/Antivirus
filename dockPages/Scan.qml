@@ -5,9 +5,40 @@ import QtQuick.Layouts 1.1
 
 Page {
 
-    Text {
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: qsTr("Scan")
+    id: root
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 3
+        spacing: 3
+
+        Text {
+
+        }
+
+        TextField {
+            id: path_to_file_or_dir
+            Layout.fillWidth: true
+            placeholderText: "Folder or File for Scan"
+        }
+
+        Button {
+            id: proccessButton
+            text: "Scan"
+            Layout.fillWidth: true
+            onClicked: {
+                scanner.scan(path_to_file_or_dir.text)
+            }
+        }
+
+        TextArea {
+            id: data
+            text: scanner.scan_signature
+            readOnly: true
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+        }
     }
 
     Dock {

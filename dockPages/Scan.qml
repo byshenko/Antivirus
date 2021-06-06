@@ -33,7 +33,7 @@ Page {
 
         TextArea {
             id: data
-            text: scanner.scan_signature
+            text: scanner.scanProgress
             readOnly: true
             Layout.fillHeight: true
             Layout.fillWidth: true

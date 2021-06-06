@@ -2,7 +2,7 @@
 
 Scanner::Scanner(QObject *parent) : QObject(parent)
 {
-    this->m_scanProgress = "No logged information";
+    this->m_scanProgress = "No logged information\n";
 }
 
 Scanner::~Scanner()
@@ -34,21 +34,17 @@ void Scanner::scan(const QString &path)
 
         if(scanFile(path))
         {
-            // #TODO: File was scanned
-        }
-        else
-        {
-            // #TODO: File wasn't scanned
+            setScanProgress(scanProgress() + path + ": File can be scanned\n");
+            scanFile(path);
+            return;
         }
 
+        setScanProgress(scanProgress() + path + ": File can't be scanned\n");
         return;
     }
 
     qDebug() << "Object doesn't exists";
-
-    this->m_scanProgress = "Object doesn't exists";
-
-    return;// 0;
+    setScanProgress(scanProgress() + path + ": Object doesn't exists\n");
 }
 
 uint32_t Scanner::scanFile(const QString &path)
@@ -57,8 +53,9 @@ uint32_t Scanner::scanFile(const QString &path)
 
     if (!file.open(QIODevice::ReadOnly))
     {
-      qDebug() << "Can't open File\n";
-      return 0;
+        setScanProgress(scanProgress() + path + ": Can't open File\n");
+        qDebug() << "Can't open File\n";
+        return 0;
     }
 
     QByteArray pattern("\x41\x0E\x28\x42\x0E\x20");
@@ -73,13 +70,15 @@ uint32_t Scanner::scanFile(const QString &path)
 
         if (data.contains(pattern))
         {
+            setScanProgress(scanProgress() + path + ": File contains pattern\n");
             qDebug() << "data contains pattern";
+            return 1;
         }
 
         while((pos = matcher.indexIn(data, 0)) != -1)
         {
           qDebug() << "pattern found at pos" << offset + pos;
-          qDebug() << data;
+          setScanProgress(scanProgress() + path + ": Pattern found at pos [" + QString(offset + pos) + "]\n");
           file.close();
           return 1;
         }
@@ -88,6 +87,7 @@ uint32_t Scanner::scanFile(const QString &path)
     }
 
     file.close();
+    setScanProgress(scanProgress() + path + ": File doesn't contain pattern\n");
     qDebug() << "pattern was not found";
 
     return 0;
@@ -95,6 +95,7 @@ uint32_t Scanner::scanFile(const QString &path)
 
 uint32_t Scanner::scanDir(const QString &path)
 {
+    setScanProgress(scanProgress() + path +  ": Dir was Found");
     return 0;
 }
 

@@ -21,10 +21,10 @@ public:
     explicit Scanner(QObject *parent = nullptr);
     ~Scanner();
 
-    QString scanProgress() const; // READ
+    QString scanProgress() const; // READ scanProgress
 
 signals:
-    void scanProgressChanged();
+    void scanProgressChanged(); // NOTIFY scanProgress
 
 public slots:
     void scan(const QString &path);
@@ -33,7 +33,7 @@ protected:
     uint32_t scanFile(const QString &path);
     uint32_t scanDir(const QString &path);
 
-    void setScanProgress(QString newScanProgress);
+    void setScanProgress(QString newScanProgress); // WRITE scanProgress with NOTIFY
 
 private:
     QString m_scanProgress; // scan progress

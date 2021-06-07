@@ -129,12 +129,10 @@ void Scanner::getRequestToVirustotal(QString filePath)
     }
 
     QByteArray fileBytes = readFile(&file);
+    QByteArray sha256    = QCryptographicHash::hash(fileBytes, QCryptographicHash::Sha256).toHex();
 
-    setScanProgress(scanProgress() + QString("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + this->m_apiKey +
-                                          "&resource=" + QCryptographicHash::hash(fileBytes, QCryptographicHash::Sha256).toHex()));
-
-    QNetworkRequest request(QUrl(QString("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + this->m_apiKey +
-                                 "&resource=" + QCryptographicHash::hash(fileBytes, QCryptographicHash::Sha256).toHex())));
+    QNetworkRequest request(QUrl("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + this->m_apiKey +
+                                 "&resource=" + sha256));
 
     // look at `Scanner::Scanner` for `m_networkAccessManager = new QNetworkAccessManager(this)`
     connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(getResponseFromVirustotal(QNetworkReply*)));

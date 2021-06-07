@@ -59,6 +59,7 @@ protected:
     /* WRITE `scanProgress` with calling NOTIFY */
     void setScanProgress(QString newScanProgress);
 
+    /* Read QFile to QByteArray and returns it */
     QByteArray readFile(QFile *file);
 
 private:

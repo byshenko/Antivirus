@@ -8,7 +8,11 @@ Page {
     id: root
 
     ColumnLayout {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: dock.top
+
         anchors.margins: 3
         spacing: 3
 
@@ -31,17 +35,24 @@ Page {
             }
         }
 
-        TextArea {
-            id: data
-            text: scanner.scanProgress
-            readOnly: true
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-
+        ScrollView {
+           ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+           ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+           ScrollBar.vertical.position: scrollPosition
+           Layout.fillHeight: true
+           Layout.fillWidth: true
+           TextArea {
+               id: data
+               anchors.fill: parent
+               text: scanner.scanProgress
+               readOnly: true
+               selectByMouse: true
+           }
         }
     }
 
     Dock {
+        id: dock
         onClickedScan: { /* From page Scan can't go to page Scan */ }
         onClickedStatus: { stackView.replace(status_page) }
         onClickedUpdate: { stackView.replace(update_page) }

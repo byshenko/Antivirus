@@ -15,15 +15,7 @@ void Scanner::scan(const QString &path)
     if(QDir(path).exists())
     {
         qDebug() << path << " is Dir";
-
-        if (scanDir(path))
-        {
-            // #TODO: Dir was scanned
-        }
-        else
-        {
-            // #TODO: Dir wasn't scanned
-        }
+        scanDir(path);
 
         return;
     }
@@ -31,20 +23,13 @@ void Scanner::scan(const QString &path)
     if(QFile(path).exists())
     {
         qDebug() << path << " is File";
+        scanFile(path);
 
-        if(scanFile(path))
-        {
-            setScanProgress(scanProgress() + path + ": File can be scanned\n");
-            scanFile(path);
-            return;
-        }
-
-        setScanProgress(scanProgress() + path + ": File can't be scanned\n");
         return;
     }
 
     qDebug() << "Object doesn't exists";
-    setScanProgress(scanProgress() + path + ": Object doesn't exists\n");
+    setScanProgress(scanProgress() + path + ": Object doesn't exists");
 }
 
 uint32_t Scanner::scanFile(const QString &path)
@@ -53,7 +38,7 @@ uint32_t Scanner::scanFile(const QString &path)
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        setScanProgress(scanProgress() + path + ": Can't open File\n");
+        setScanProgress(scanProgress() + path + ": Can't open File");
         qDebug() << "Can't open File\n";
         return 0;
     }
@@ -70,7 +55,7 @@ uint32_t Scanner::scanFile(const QString &path)
 
         if (data.contains(pattern))
         {
-            setScanProgress(scanProgress() + path + ": File contains pattern\n");
+            setScanProgress(scanProgress() + path + ": File contains pattern");
             qDebug() << "data contains pattern";
             return 1;
         }
@@ -78,7 +63,7 @@ uint32_t Scanner::scanFile(const QString &path)
         while((pos = matcher.indexIn(data, 0)) != -1)
         {
           qDebug() << "pattern found at pos" << offset + pos;
-          setScanProgress(scanProgress() + path + ": Pattern found at pos [" + QString(offset + pos) + "]\n");
+          setScanProgress(scanProgress() + path + ": Pattern found at pos [" + QString(offset + pos) + "]");
           file.close();
           return 1;
         }
@@ -87,7 +72,7 @@ uint32_t Scanner::scanFile(const QString &path)
     }
 
     file.close();
-    setScanProgress(scanProgress() + path + ": File doesn't contain pattern\n");
+    setScanProgress(scanProgress() + path + ": File doesn't contain pattern");
     qDebug() << "pattern was not found";
 
     return 0;
@@ -103,12 +88,38 @@ void Scanner::setScanProgress(QString newScanProgress)
 {
     if(this->m_scanProgress != newScanProgress)
     {
-        this->m_scanProgress = newScanProgress;
+        this->m_scanProgress = newScanProgress + "\n";
 
         // NOTIFY that m_scanProgree was Changed
         emit scanProgressChanged();
     }
 }
+
+void Scanner::sendGet(QString Url)
+{
+    QNetworkAccessManager manager;
+    QNetworkRequest request;
+    request.setUrl(Url);
+    //user-agent
+    request.setUrl(Url);
+    request.setRawHeader("Accept", "application/json");
+    auto reply = manager.get(request); //Получаем данные с сервера
+    qDebug() << reply;
+}
+
+void Scanner::getRequestToVirustotal(QString apiKey, QString sha256)
+{
+    QNetworkRequest request(QUrl("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + apiKey + "&resource=" + sha256));
+    QNetworkAccessManager mngr;
+    connect(&mngr, SIGNAL(finished(QNetworkReply*)), SLOT(getResponseFromVirustotal(QNetworkReply*)));
+    mngr.get(request);
+}
+
+void Scanner::getResponseFromVirustotal(QNetworkReply *reply)
+{
+    qDebug() << reply->readAll();
+}
+
 
 QString Scanner::scanProgress() const
 {

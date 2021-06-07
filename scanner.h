@@ -2,15 +2,19 @@
 #define SCANNER_H
 
 #include <iostream>
-#include <QObject>
-#include <QFile>
-#include <QDir>
-#include <QString>
+
+#include <QNetworkAccessManager>
+#include <QByteArrayMatcher>
+#include <QNetworkReply>
+#include <QByteArray>
 #include <QArrayData>
 #include <QBitArray>
-#include <QByteArray>
+#include <QString>
+#include <QObject>
 #include <QDebug>
-#include <QByteArrayMatcher>
+#include <QFile>
+#include <QDir>
+#include <QUrl>
 
 class Scanner : public QObject
 {
@@ -28,6 +32,8 @@ signals:
 
 public slots:
     void scan(const QString &path);
+    void getRequestToVirustotal(QString apiKey, QString sha256);
+    void getResponseFromVirustotal(QNetworkReply *reply); // this SIGNAL was called from getRequestToVirustotal()
 
 protected:
     uint32_t scanFile(const QString &path);
@@ -35,10 +41,11 @@ protected:
 
     void setScanProgress(QString newScanProgress); // WRITE scanProgress with NOTIFY
 
+    void sendGet(QString Url);
+
 private:
     QString m_scanProgress; // scan progress
     QList<QString> m_signatures; // scan result
-
 
     struct scanResult
     {

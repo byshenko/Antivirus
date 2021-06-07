@@ -46,8 +46,8 @@ uint32_t Scanner::scanFile(const QString &path)
     QByteArray pattern("\x41\x0E\x28\x42\x0E\x20");
     QByteArrayMatcher matcher(pattern);
 
-    auto offset = 0;
-    auto pos = 0;
+    int offset = 0;
+    int pos = 0;
 
     while (!file.atEnd())
     {
@@ -60,12 +60,12 @@ uint32_t Scanner::scanFile(const QString &path)
             return 1;
         }
 
-        while((pos = matcher.indexIn(data, 0)) != -1)
+        if((pos = matcher.indexIn(data, 0)) != -1)
         {
           qDebug() << "pattern found at pos" << offset + pos;
           setScanProgress(scanProgress() + path + ": Pattern found at pos [" + QString(offset + pos) + "]");
           file.close();
-          return 1;
+          return offset + pos;
         }
 
         offset += 2048;
@@ -93,18 +93,6 @@ void Scanner::setScanProgress(QString newScanProgress)
         // NOTIFY that m_scanProgree was Changed
         emit scanProgressChanged();
     }
-}
-
-void Scanner::sendGet(QString Url)
-{
-    QNetworkAccessManager manager;
-    QNetworkRequest request;
-    request.setUrl(Url);
-    //user-agent
-    request.setUrl(Url);
-    request.setRawHeader("Accept", "application/json");
-    auto reply = manager.get(request); //Получаем данные с сервера
-    qDebug() << reply;
 }
 
 void Scanner::getRequestToVirustotal(QString apiKey, QString sha256)

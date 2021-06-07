@@ -26,12 +26,27 @@ Page {
             placeholderText: "Folder or File for Scan"
         }
 
-        Button {
-            id: proccessButton
-            text: "Scan"
+        RowLayout {
             Layout.fillWidth: true
-            onClicked: {
-                scanner.scan(path_to_file_or_dir.text)
+
+            Button {
+                id: proccessButton
+                Layout.fillWidth: true
+                text: "Scan"
+
+                onClicked: {
+                    scanner.scan(path_to_file_or_dir.text)
+                }
+            }
+
+            Button {
+                id: virusTotalButton
+                Layout.fillWidth: true
+                text: "Scan via VirusTotal"
+
+                onClicked: {
+                    scanner.scan(path_to_file_or_dir.text)
+                }
             }
         }
 

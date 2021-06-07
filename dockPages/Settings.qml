@@ -5,12 +5,55 @@ import QtQuick.Layouts 1.1
 
 Page {
 
-    Text {
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: qsTr("Settings")
+    ColumnLayout {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: dock.top
+
+        anchors.margins: 3
+        spacing: 3
+
+        Text {
+            // empty
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            TextField {
+                id: virusTotalApiKey
+                Layout.fillWidth: true
+                placeholderText: "VirusTotal API Key"
+            }
+
+            Button {
+                id: virusTotalButton
+                text: "Save"
+
+                onClicked: {
+                    scanner.saveVirustotalApiKey(virusTotalApiKey.text)
+                }
+            }
+        }
+
+        ScrollView {
+           ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+           ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+           Layout.fillHeight: true
+           Layout.fillWidth: true
+           TextArea {
+               id: data
+               anchors.fill: parent
+               text: scanner.scanProgress
+               readOnly: true
+               selectByMouse: true
+           }
+        }
     }
 
     Dock {
+        id: dock
         onClickedScan: { stackView.replace(scan_page) }
         onClickedStatus: { stackView.replace(status_page) }
         onClickedUpdate: { stackView.replace(update_page) }

@@ -3,11 +3,12 @@
 Scanner::Scanner(QObject *parent) : QObject(parent)
 {
     this->m_scanProgress = "No logged information\n";
+    this->m_networkAccessManager = new QNetworkAccessManager(this);
 }
 
 Scanner::~Scanner()
 {
-
+    delete this->m_networkAccessManager;
 }
 
 void Scanner::scan(const QString &path)
@@ -95,17 +96,79 @@ void Scanner::setScanProgress(QString newScanProgress)
     }
 }
 
-void Scanner::getRequestToVirustotal(QString apiKey, QString sha256)
+QByteArray Scanner::readFile(QFile *file)
 {
-    QNetworkRequest request(QUrl("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + apiKey + "&resource=" + sha256));
-    QNetworkAccessManager mngr;
-    connect(&mngr, SIGNAL(finished(QNetworkReply*)), SLOT(getResponseFromVirustotal(QNetworkReply*)));
-    mngr.get(request);
+    QByteArray fileBytes;
+
+    if (file->open(QIODevice::ReadOnly))
+    {
+       while (!file->atEnd())
+       {
+          fileBytes += file->readLine();
+       }
+       file->close();
+    }
+
+    return fileBytes;
+}
+
+void Scanner::getRequestToVirustotal(QString filePath)
+{
+    if(this->m_apiKey.length() != 64)
+    {
+        setScanProgress(scanProgress() +  "Incorrect API Key. Go Settings to Fix");
+        return;
+    }
+
+    QFile file(filePath);
+
+    if(!file.exists())
+    {
+        setScanProgress(scanProgress() + filePath +  ": not a File");
+        return;
+    }
+
+    QByteArray fileBytes = readFile(&file);
+
+    setScanProgress(scanProgress() + QString("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + this->m_apiKey +
+                                          "&resource=" + QCryptographicHash::hash(fileBytes, QCryptographicHash::Sha256).toHex()));
+
+    QNetworkRequest request(QUrl(QString("https://www.virustotal.com/vtapi/v2/file/report?apikey=" + this->m_apiKey +
+                                 "&resource=" + QCryptographicHash::hash(fileBytes, QCryptographicHash::Sha256).toHex())));
+
+    // look at `Scanner::Scanner` for `m_networkAccessManager = new QNetworkAccessManager(this)`
+    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(getResponseFromVirustotal(QNetworkReply*)));
+    m_networkAccessManager->get(request);
 }
 
 void Scanner::getResponseFromVirustotal(QNetworkReply *reply)
 {
-    qDebug() << reply->readAll();
+    if(reply->error())
+    {
+        setScanProgress(scanProgress() + "Request To VirusTotal error");
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    QJsonObject root = document.object();
+    int positives = root.value("positives").toInt(); // get from VirusTotal-JSON number of positives results
+
+    setScanProgress(scanProgress() + "VirusTotal positives: " + QString::number(positives));
+    qDebug() << "positives: " << positives;
+
+    // qDebug() << reply->readAll();
+}
+
+void Scanner::saveVirustotalApiKey(QString apiKey)
+{
+    if(apiKey.length() != 64)
+    {
+        setScanProgress(scanProgress() + "API Key must be of length 64 chars (bytes)");
+        return;
+    }
+
+    this->m_apiKey = apiKey;
+    setScanProgress(scanProgress() + "API Key was saved");
 }
 
 

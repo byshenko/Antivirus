@@ -2,8 +2,11 @@
 #define SCANNER_H
 
 #include <QNetworkAccessManager>
+#include <QCryptographicHash>
 #include <QByteArrayMatcher>
+#include <QJsonDocument>
 #include <QNetworkReply>
+#include <QJsonObject>
 #include <QByteArray>
 #include <QArrayData>
 #include <QBitArray>
@@ -38,10 +41,13 @@ public slots:
     void scan(const QString &path);
 
     /* Send GET-Request to VirusTotal */
-    void getRequestToVirustotal(QString apiKey, QString sha256);
+    void getRequestToVirustotal(QString filePath);
 
     /* this SIGNAL was called from getRequestToVirustotal() */
     void getResponseFromVirustotal(QNetworkReply *reply);
+
+    /* Save VirusTotal API Key in m_apiKey for scanning data via VirusTotal */
+    void saveVirustotalApiKey(QString apiKey);
 
 protected:
     /* Called from scan() is the case of File scanning */
@@ -53,9 +59,21 @@ protected:
     /* WRITE `scanProgress` with calling NOTIFY */
     void setScanProgress(QString newScanProgress);
 
+    QByteArray readFile(QFile *file);
+
 private:
-    QString m_scanProgress; // scan progress
-    QList<QString> m_signatures; // scan result
+
+    /* scan progress */
+    QString m_scanProgress;
+
+    /* scan result structure for StatusScreen output */
+    QList<QString> m_signatures;
+
+    /* API Key for VirusTotal scanning data */
+    QString m_apiKey;
+
+    /* QNetworkAccessManager for VirusTotal Requestes */
+    QNetworkAccessManager *m_networkAccessManager;
 
     struct scanResult
     {

@@ -45,7 +45,7 @@ Page {
                 text: "Scan via VirusTotal"
 
                 onClicked: {
-                    scanner.scan(path_to_file_or_dir.text)
+                    scanner.getRequestToVirustotal(path_to_file_or_dir.text)
                 }
             }
         }
@@ -53,7 +53,6 @@ Page {
         ScrollView {
            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-           ScrollBar.vertical.position: scrollPosition
            Layout.fillHeight: true
            Layout.fillWidth: true
            TextArea {

@@ -1,8 +1,8 @@
-#include <QQmlContext>
-#include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QLocale>
+#include <QGuiApplication>
 #include <QTranslator>
+#include <QQmlContext>
+#include <QLocale>
 
 #include <scanner.h>
 
